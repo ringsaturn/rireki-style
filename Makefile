@@ -24,8 +24,7 @@
 # SUCH DAMAGE.
 #
 TARGET = rireki.pdf
-LATEX = uplatex
-#LATEX = lualatex
+LATEX = xelatex
 
 all: $(TARGET)
 

@@ -36,20 +36,25 @@
 % 様々なカスタマイズも可能です。こちらもご利用いただけると幸いです。
 %
 %----------------------------------------------------------------------------
-\newif\iflualatex
-% lualatex を使用するには \lualatextrue を有効にしてください
-%\lualatextrue
-%
-% ヘッダー
-%
-\iflualatex
-\documentclass[b5j]{ltjsarticle}
-\usepackage[deluxe,nfssonly]{luatexja-preset}
+% XeLaTeX 移行: lualatex / uplatex 分岐を削除し XeLaTeX 用クラスに統一
+% bxjsarticle + 条件付きフォント選択 (resume.cls 方式)
+\documentclass[xelatex,ja=standard,b5j]{bxjsarticle}
 \usepackage{graphicx}
-\else
-\documentclass[uplatex,b5j]{jsarticle}
-\usepackage[dvipdfmx]{graphicx}
-\fi
+\usepackage{fontspec}
+\usepackage{xeCJK}
+% 日本語 Serif フォント選択優先順位: Noto Serif JP -> Hiragino Mincho ProN -> HaranoAji Mincho
+\IfFontExistsTF{Noto Serif JP}{\setCJKmainfont{Noto Serif JP}}{%
+	\IfFontExistsTF{Hiragino Mincho ProN}{\setCJKmainfont{Hiragino Mincho ProN}}{\setCJKmainfont{HaranoAjiMincho-Regular.otf}}%
+}
+% 日本語 Sans フォント選択優先順位: Noto Sans JP -> Hiragino Sans W3 -> HaranoAji Gothic
+\IfFontExistsTF{Noto Sans JP}{\setCJKsansfont{Noto Sans JP}}{%
+	\IfFontExistsTF{Hiragino Sans W3}{\setCJKsansfont{Hiragino Sans W3}}{\setCJKsansfont{HaranoAjiGothic-Medium.otf}}%
+}
+% 等幅 (任意) Noto Sans Mono CJK JP があれば設定
+\IfFontExistsTF{Noto Sans Mono CJK JP}{\setCJKmonofont{Noto Sans Mono CJK JP}}{}
+% 旧 pLaTeX コマンド互換 (\gt, \gtfamily)
+\providecommand{\gt}{\textsf}
+\providecommand{\gtfamily}{\sffamily}
 \usepackage{rireki}
 %
 % オプション
@@ -88,7 +93,7 @@
 \現住所読み{まるまるし まるまるちょう}
 \現住所市外局番{0123}
 \現住所電話番号{45-6789}
-\現住所呼び出し{◯◯ 方}
+\現住所呼び出し{〇〇 方}
 %
 % 連絡先
 %
@@ -105,24 +110,24 @@
 % 20個を超える部分は印刷されませんので、ご注意ください。
 % 印刷順は、学歴=>職歴の順になります。
 %
-\学歴{平成1}{4}{◯◯市立◯◯高等学校 入学}      % {年}{月}{内容}
-\学歴{平成2}{3}{◯◯市立◯◯高等学校 卒業}
-\学歴{平成3}{4}{◯◯大学 入学}
-\学歴{平成4}{3}{◯◯大学 卒業}
-\学歴{平成5}{4}{◯◯大学大学院 入学}
-\学歴{平成6}{3}{◯◯大学大学院 修了}
-\学歴{平成7}{4}{専門学校◯◯ 入学}
-\学歴{平成8}{3}{専門学校◯◯ 卒業}
-\職歴{平成9}{4}{株式会社◯◯ 入社}
-\職歴{平成10}{9}{株式会社◯◯ 退職}
-\職歴{平成11}{10}{株式会社◯◯ 入社}
-\職歴{平成12}{10}{株式会社◯◯ 退職}
-\職歴{平成13}{10}{有限会社◯◯ 入社}
-\職歴{平成14}{8}{有限会社◯◯ 退職}
-\学歴{平成15}{9}{◯◯◯大学 入学（海外留学）}
-\学歴{平成16}{9}{◯◯◯大学 中退}
-\職歴{平成17}{10}{株式会社◯◯ 入社}
-\職歴{平成18}{10}{株式会社◯◯ 退職}
+\学歴{平成1}{4}{〇〇市立〇〇高等学校 入学}      % {年}{月}{内容}
+\学歴{平成2}{3}{〇〇市立〇〇高等学校 卒業}
+\学歴{平成3}{4}{〇〇大学 入学}
+\学歴{平成4}{3}{〇〇大学 卒業}
+\学歴{平成5}{4}{〇〇大学大学院 入学}
+\学歴{平成6}{3}{〇〇大学大学院 修了}
+\学歴{平成7}{4}{専門学校〇〇 入学}
+\学歴{平成8}{3}{専門学校〇〇 卒業}
+\職歴{平成9}{4}{株式会社〇〇 入社}
+\職歴{平成10}{9}{株式会社〇〇 退職}
+\職歴{平成11}{10}{株式会社〇〇 入社}
+\職歴{平成12}{10}{株式会社〇〇 退職}
+\職歴{平成13}{10}{有限会社〇〇 入社}
+\職歴{平成14}{8}{有限会社〇〇 退職}
+\学歴{平成15}{9}{〇〇〇大学 入学（海外留学）}
+\学歴{平成16}{9}{〇〇〇大学 中退}
+\職歴{平成17}{10}{株式会社〇〇 入社}
+\職歴{平成18}{10}{株式会社〇〇 退職}
 \職歴{平成18}{10}{現在無職}
 %
 % 資格
@@ -142,18 +147,18 @@
 %
 \志望の動機{
 	\begin{tabular}{ll}
-	{\gt 志望の動機} & ◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯\\
-	{\gt 特技} & ◯◯◯\\
-	{\gt 好きな学科} & ◯◯◯\\
-	{\gt アピールポイント} & ◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯\\
+	{\gt 志望の動機} & 〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇\\
+	{\gt 特技} & 〇〇〇\\
+	{\gt 好きな学科} & 〇〇〇\\
+	{\gt アピールポイント} & 〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇\\
 	\end{tabular}
 }
 \本人希望記入欄{
 	私が希望する仕事の条件は下記の通りです。
 	\begin{itemize}
-	\item ◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯
-	\item ◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯
-	\item ◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯
+	\item 〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇
+	\item 〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇
+	\item 〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇
 	\end{itemize}
 }
 
